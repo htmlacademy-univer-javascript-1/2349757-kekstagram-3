@@ -1,10 +1,8 @@
-function getRandomInt (min, max){
-  if (min >= max || min < 0){
-    console.log('Неккоректные параметры диапазона');
-    return
-  }
-
-  return Math.round(Math.random() * (max - min) + min);
+function getRandomPositiveInteger (a, b) {
+  const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
+  const upper = Math.floor(Math.max(Math.abs(a), Math.abs(b)));
+  const result = Math.random() * (upper - lower + 1) + lower;
+  return Math.floor(result);
 }
 
 function checkLengthStr(str, length){

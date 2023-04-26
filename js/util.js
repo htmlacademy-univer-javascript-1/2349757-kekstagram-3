@@ -1,4 +1,4 @@
-function getRandom (min, max) {
+export function getRandom (min, max) {
   if (max < min) {
     const temp = min;
     min = max;
@@ -7,9 +7,11 @@ function getRandom (min, max) {
   return Math.floor(Math.random() * (Math.abs(max - min) + 1)) + min;
 }
 
-const checkLength = (str,  maxLength) => str.length <= maxLength;
-checkLength('qweefdcs', 10);
-
-const getRandomArrayElement = (elements) => elements[getRandom(0, elements.length - 1)];
-
-export {getRandom, getRandomArrayElement};
+export function checkLength(str, len){
+  str = String(str);
+  len = Number(len);
+  if (len < 0){
+    return 0;
+  }
+  return str.length <= len;
+}

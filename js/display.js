@@ -1,46 +1,50 @@
-const picturePreview = (url, description) => {
-  const preview= document.createElement('img');
-  preview.classList.add('picture__img');
+const picturePrev = (url, descript) => {
+  const picture= document.createElement('img');
 
-  preview.setAttribute('src', url);
-  preview.setAttribute('height', 182);
-  preview.setAttribute('width', 182);
-  preview.setAttribute('alt', description);
+  picture.classList.add('picture__img');
 
-  return preview;
+  picture.setAttribute('src', url);
+  picture.setAttribute('height', 182);
+  picture.setAttribute('width', 182);
+  picture.setAttribute('alt', descript);
+
+  return picture;
 }
 
-const pictureElements = (comments, likes) => {
-  const lik = document.createElement('span');
-  lik.classList.add('picture__likes');
-  lik.append(likes);
+const createComponentsPicture = (comments, likes) => {
 
-  const com = document.createElement('span');
-  com.classList.add('picture__comments');
-  com.append(comments);
+  const likesCount = document.createElement('span');
+  likesCount.classList.add('picture__likes');
+  likesCount.append(likes);
 
-  return(com, lik);
+  const commentsCount = document.createElement('span');
+  commentsCount.classList.add('picture__comments');
+  commentsCount.append(comments);
+
+  return(commentsCount, likesCount);
 }
 
-const pictureFromData = ({url, description, comments, likes}) => {
-  const detailLink = document.createElement('a');
-  detailLink.setAttribute('href', '#');
-  detailLink.classList.add('picture');
+const createPicture = ({url, description, comments, likes}) => {
 
-  const picturePrev = picturePreview(url, description);
+  const picture = picturePrev(url, description);
 
-  const infoContainer = document.createElement('p');
-  infoContainer.classList.add('picture__info');
-  infoContainer.append(pictureElements(comments, likes));
+  const pictureInfo = document.createElement('p');
+  pictureInfo.classList.add('picture__info');
+  pictureInfo.append(createComponentsPicture(comments, likes));
 
-  detailLink.append(picturePrev, infoContainer);
+  const pictureLink = document.createElement('a');
+  pictureLink.setAttribute('href', '#');
+  pictureLink.classList.add('picture');
+  pictureLink.append(picture, pictureInfo);
 }
 
-export const display = (data) => {
+
+
+export const displayData = (data) => {
   const fragment = new DocumentFragment();
 
-  fragment = data.map((picture) => {pictureFromData(picture)});
+  fragment = data.map((picture) => {createPicture(picture)});
 
-  const container = document.querySelector('.pictures');
-  container.appendChild(fragment);
+  const picturesContainer = document.querySelector('.pictures');
+  picturesContainer.appendChild(fragment);
 }

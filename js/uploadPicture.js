@@ -1,52 +1,47 @@
 import {pristine} from "./validation.js";
-import {onEffectButtonClick, setEffect, setPictureScale, onControlSmallerButtonClick, onControlBiggerButtonClick} from './editOfPicture.js';
+import {onEffectClick, setEffect, setScale, reduceImage, enlargeImage} from './editOfPicture.js';
 
-const pictureUploadForm = document.querySelector('#upload-select-image');
-const preview = document.querySelector('.img-upload__preview').querySelector('img');
-const pictureUploadOverlay = pictureUploadForm.querySelector('.img-upload__overlay');
-const pictureInput = pictureUploadForm.querySelector('#upload-file');
-const overlayCloseButton = pictureUploadForm.querySelector('#upload-cancel');
-const effects = document.querySelector('.effects__list');
-const scaleSmallerButton = document.querySelector('.scale__control--smaller');
-const scaleBiggerButton = document.querySelector('.scale__control--bigger');
+const uploadForm = document.querySelector('.img-upload__form');
+const uploadPreview = uploadForm.querySelector('.img-upload__preview').querySelector('img');
+const uploadOverlay = uploadForm.querySelector('.img-upload__overlay');
+const uploadInput = uploadForm.querySelector('.img-upload__input');
+const uploadCancelButton = uploadForm.querySelector('.img-upload__cancel');
+const effectsList = uploadForm.querySelector('.effects__list');
+const scaleSmaller = uploadForm.querySelector('.scale__control--smaller');
+const scaleBigger = uploadForm.querySelector('.scale__control--bigger');
 
-function closeImageUploadModal() {
-  pictureUploadOverlay.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-  setEffect('none');
-  setPictureScale(100);
-  pristine.reset();
-  pictureUploadForm.reset();
-}
-
-
-pictureInput.addEventListener('change', function(evt) {
-  pictureUploadOverlay.classList.toggle('hidden');
+uploadInput.addEventListener('change', function() {
+  uploadOverlay.classList.toggle('hidden');
   document.body.classList.toggle('modal-open');
 
-  const uploadedImage = document.querySelector('#upload-file').files[0];
-  const fileReader = new FileReader();
+  const image = uploadInput.files[0];
+  const reader = new FileReader();
 
-  fileReader.onloadend = function() {
-    preview.src = fileReader.result;
+  reader.onloadend = function() {
+    uploadPreview.src = reader.result;
   };
-  fileReader.readAsDataURL(uploadedImage);
+  reader.readAsDataURL(image);
 
-  effects.addEventListener('change', onEffectButtonClick);
-  scaleSmallerButton.addEventListener('click', onControlSmallerButtonClick);
-  scaleBiggerButton.addEventListener('click', onControlBiggerButtonClick);
+  scaleSmaller.addEventListener('click', reduceImage);
+  scaleBigger.addEventListener('click', enlargeImage);
+  effectsList.addEventListener('change', onEffectClick);
 });
 
-
-overlayCloseButton.addEventListener('click', function(evt) {
-  closeImageUploadModal();
+uploadCancelButton.addEventListener('click', function() {
+  closeUploadModal();
 });
+
 document.addEventListener('keydown', function(evt) {
-  if (evt.key == "Escape") closeImageUploadModal();
+  if (evt.key == "Escape") {
+    closeUploadModal();
+  }
 })
 
-pictureUploadForm.addEventListener('submit', function(evt) {
-  evt.preventDefault();
-  pictureUploadForm.submit();
-  closeImageUploadModal();
-});
+export function closeUploadModal() {
+  uploadOverlay.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+  setEffect('none');
+  setScale(100);
+  pristine.reset();
+  uploadForm.reset();
+}

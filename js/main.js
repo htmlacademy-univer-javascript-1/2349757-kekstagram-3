@@ -1,6 +1,18 @@
-import { createPhoto } from "./data.js";
-import { displayData } from "./display.js";
+import { displayData } from "./display-data.js";
+import { loadPictures } from "./api.js";
+import { submitForm } from "./validation.js";
+import { closeUploadModal } from "./uploadPicture.js";
 import './uploadPicture.js';
 
-const photos = Array.from({length: 25}, createPhoto);
-displayData(photos);
+
+loadPictures(
+  (photos) => {
+    displayData(photos);
+  },
+  () => {
+    showErrorMessage();
+  }
+);
+
+submitForm(closeUploadModal);
+

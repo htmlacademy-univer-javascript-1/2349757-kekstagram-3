@@ -1,4 +1,5 @@
-const form = document.querySelector('#upload-select-image');
+const form = document.querySelector('.img-upload__form');
+const uploadButton = form.querySelector('.img-upload__submit');
 export const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
@@ -6,15 +7,29 @@ export const pristine = new Pristine(form, {
   errorTextClass: 'form__error'
 });
 
-function validateCommentLength(value) {
-  return value.length >= 20 && value.length <= 140;
+pristine.addValidator(
+  form.querySelector('.text__description'),
+  validateCaptionLength,
+  'От 20 до 140 символов'
+);
+
+pristine.addValidator(
+  form.querySelector('.text__hashtags'),
+  validateHashTags,
+  'Неверный формат хэштегов'
+);
+
+function validateCaptionLength(str) {
+  return str.length >= 20 && str.length <= 140;
 }
 
-function validateHashTags(value) {
-  if (value.length === 0) { return true; }
-  const hashTags = value.split(' ');
+function validateHashTags(str) {
+  if (str.length === 0) {
+    return true;
+  }
 
-  const regex = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/;
+  const hashTags = str.split(' ');
+  const regex = /^#[A-Za-zА-Яа-яЁё0-9]{1,20}$/;
 
   for (let i = 0; i < hashTags.length; i++) {
     if (!regex.test(hashTags[i])) {
@@ -33,32 +48,18 @@ function validateHashTags(value) {
   return true;
 }
 
-pristine.addValidator(
-  form.querySelector('.text__description'),
-  validateCommentLength,
-  'От 20 до 140 символов'
-);
-
-pristine.addValidator(
-  form.querySelector('.text__hashtags'),
-  validateHashTags,
-  'Неверный формат ХэшТегов'
-);
-
-const submitButton = form.querySelector('#upload-submit');
-
 function blockSubmitButton() {
-  submitButton.disabled = true;
-  submitButton.textContent = 'Загружаю...';
+  uploadButton.disabled = true;
+  uploadButton.textContent = 'Загружаю...';
 }
 
 function unblockSubmitButton() {
-  submitButton.disabled = false;
-  submitButton.textContent = 'Опубликовать';
+  uploadButton.disabled = false;
+  uploadButton.textContent = 'Опубликовать';
 }
 
 import { sendData } from "./api.js";
-import { convertDataToInformation, showErrorMessage, showSuccessMessage } from "./util.js";
+import { dataToInfo, displayErrorMessage, displaySuccessMessage } from "./util.js";
 import { addNewPicture } from "./display-data.js"
 
 export function submitForm(onSuccess) {
@@ -71,13 +72,13 @@ export function submitForm(onSuccess) {
       console.log(evt.target);
       sendData(
         () => {
-          addNewPicture(convertDataToInformation(sentInformation));
-          showSuccessMessage();
+          addNewPicture(dataToInfo(sentInformation));
+          displaySuccessMessage();
           unblockSubmitButton();
           onSuccess();
         },
         () => {
-          showErrorMessage();
+          displayErrorMessage();
           unblockSubmitButton();
         },
         sentInformation,

@@ -1,5 +1,5 @@
 import {pristine} from "./validation.js";
-import {onEffectClick, setEffect, setScale, reduceImage, enlargeImage} from './editOfPicture.js';
+import {reduceImage, enlargeImage, onEffectClick, setEffect, setScale} from './editOfPicture.js';
 
 const uploadForm = document.querySelector('.img-upload__form');
 const uploadPreview = uploadForm.querySelector('.img-upload__preview').querySelector('img');
